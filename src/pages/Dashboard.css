@@ -1,0 +1,481 @@
+/* ===== Global Styles ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.dashboard-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Hospital Background */
+  background-image: url("https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Dark Overlay */
+.dashboard-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 0;
+}
+
+/* All content above overlay */
+.dashboard-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Navbar Styles ===== */
+.navbar {
+  background: #000000;
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 20px rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 3px solid #ff3333;
+}
+
+.logo {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.logo::before {
+  content: "🏥";
+  font-size: 2rem;
+  filter: drop-shadow(0 0 5px #ff3333);
+}
+
+.navLinks {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.navLinks button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: white;
+  border: 1px solid #ff3333;
+}
+
+.navLinks button:hover {
+  background: #ff3333;
+  color: black;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 51, 51, 0.4);
+}
+
+.navLinks button.active {
+  background: #ff3333;
+  color: black;
+}
+
+/* User Profile in Navbar */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 51, 51, 0.1);
+  padding: 0.3rem 1rem;
+  border-radius: 50px;
+  border: 1px solid #ff3333;
+}
+
+.user-profile span {
+  color: white;
+  font-weight: 600;
+}
+
+.user-profile img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #ff3333;
+}
+
+/* ===== Hero Section ===== */
+.hero-section {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: white;
+  animation: fadeIn 1s ease;
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  padding: 0.5rem 2rem;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  border: 2px solid #ff3333;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  color: #ff3333;
+  font-weight: bold;
+}
+
+/* ===== Dashboard Container ===== */
+.dashboard-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  animation: slideUp 0.5s ease;
+  border: 2px solid #ff3333;
+  text-align: center;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-card h2 {
+  color: #000;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  border-bottom: 2px solid #ff3333;
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dashboard-card h2::before {
+  content: "🚑";
+  font-size: 2rem;
+}
+
+/* ===== Emergency Button ===== */
+.emergency-btn {
+  width: 100%;
+  padding: 1.5rem;
+  background: #ff3333;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 1rem 0;
+  border: 3px solid #000;
+  position: relative;
+  overflow: hidden;
+  animation: pulse 2s infinite;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(255, 51, 51, 0.5);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 50px rgba(255, 51, 51, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(255, 51, 51, 0.5);
+  }
+}
+
+.emergency-btn:hover:not(:disabled) {
+  background: #ff1a1a;
+  transform: scale(1.05);
+  box-shadow: 0 0 70px rgba(255, 51, 51, 1);
+}
+
+.emergency-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #999;
+  border-color: #666;
+  animation: none;
+}
+
+.emergency-btn::before {
+  content: "🚨";
+  font-size: 2.5rem;
+  animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* ===== Message Box ===== */
+.message-box {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre-line;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.message-box.success {
+  background: rgba(0, 255, 0, 0.1);
+  border: 2px solid #00ff00;
+  color: #006400;
+}
+
+.message-box.error {
+  background: rgba(255, 0, 0, 0.1);
+  border: 2px solid #ff3333;
+  color: #8b0000;
+}
+
+/* ===== Map Button ===== */
+.map-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 1rem;
+  background: #4285f4;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid white;
+  margin-top: 1rem;
+}
+
+.map-btn:hover {
+  background: #3367d6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+}
+
+.map-btn::before {
+  content: "📍";
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+/* ===== Location Status ===== */
+.location-status {
+  margin: 1rem 0;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.location-status.active {
+  color: #00ff00;
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid #00ff00;
+}
+
+.location-status.inactive {
+  color: #ff3333;
+  background: rgba(255, 51, 51, 0.1);
+  border: 1px solid #ff3333;
+}
+
+/* ===== User Info Card ===== */
+.user-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #333;
+  text-align: left;
+}
+
+.user-info p {
+  margin: 0.5rem 0;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-info p::before {
+  content: "•";
+  color: #ff3333;
+  font-size: 1.5rem;
+}
+
+/* ===== Loading Spinner ===== */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ff3333;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 10px;
+}
+
+/* ===== Responsive Design ===== */
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .navLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-section p {
+    font-size: 1rem;
+  }
+
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-card {
+    padding: 1.5rem;
+  }
+
+  .dashboard-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .emergency-btn {
+    font-size: 1.5rem;
+    padding: 1rem;
+  }
+
+  .emergency-btn::before {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .navLinks button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .dashboard-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .emergency-btn {
+    font-size: 1.2rem;
+    padding: 0.8rem;
+  }
+
+  .message-box {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .map-btn {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+}
