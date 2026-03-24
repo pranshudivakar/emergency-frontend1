@@ -2,8 +2,7 @@ echo '{
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "destination": "/index.html"
     }
   ]
 }' > vercel.json
-
