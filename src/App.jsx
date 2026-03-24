@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import EmergencyDashboard from "./pages/Dashboard"; // Naya import
+import Hospitals from "./pages/Hospitals"; // ✅ Import Hospitals
 
 function App() {
   return (
@@ -14,11 +14,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route
-          path="/emergency-dashboard"
-          element={<EmergencyDashboard />}
-        />{" "}
-        {/* Naya route */}
+        <Route path="/hospitals" element={<Hospitals />} /> {/* ✅ Add this */}
+        <Route path="/doctors" element={<div>Doctors Page</div>} />
+        <Route path="/ambulance" element={<div>Ambulance Page</div>} />
       </Routes>
     </BrowserRouter>
   );

@@ -74,7 +74,6 @@ const Home = () => {
           </button>
           <button onClick={() => navigate("/hospitals")}>🏨 Hospitals</button>
           <button onClick={() => navigate("/doctors")}>👨‍⚕️ Doctors</button>
-          <button onClick={() => navigate("/ambulance")}>🚑 Ambulance</button>
 
           {user ? (
             <>
