@@ -44,7 +44,7 @@ const Home = () => {
 
           alert("🚨 Emergency alert sent! Hospital will contact you soon.");
           setLoading(false);
-          navigate("/emergency-dashboard");
+          navigate("/dashboard");
         },
         (error) => {
           alert("❌ Location access needed for emergency!");
