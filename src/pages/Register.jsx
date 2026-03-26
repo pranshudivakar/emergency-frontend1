@@ -141,6 +141,8 @@ const Register = () => {
               <h3>🟢 Personal Information</h3>
 
               <input
+                name="name"
+                id="name"
                 placeholder="Full Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -152,6 +154,8 @@ const Register = () => {
               )}
 
               <input
+                name="email"
+                id="email"
                 type="email"
                 placeholder="Email"
                 value={form.email}
@@ -164,6 +168,8 @@ const Register = () => {
               )}
 
               <input
+                name="password"
+                id="password"
                 type="password"
                 placeholder="Password (min 6 characters)"
                 value={form.password}
@@ -176,6 +182,8 @@ const Register = () => {
               )}
 
               <input
+                name="phone"
+                id="phone"
                 placeholder="Phone Number (10 digits)"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -188,6 +196,8 @@ const Register = () => {
 
               <div className="form-row">
                 <input
+                  name="age"
+                  id="age"
                   placeholder="Age"
                   type="number"
                   value={form.age}
@@ -195,6 +205,8 @@ const Register = () => {
                 />
 
                 <select
+                  name="gender"
+                  id="gender"
                   value={form.gender}
                   onChange={(e) => setForm({ ...form, gender: e.target.value })}
                 >
@@ -217,6 +229,8 @@ const Register = () => {
               <h3>🔵 Medical Information</h3>
 
               <input
+                name="bloodGroup"
+                id="bloodGroup"
                 placeholder="Blood Group (e.g., O+, A+)"
                 value={form.bloodGroup}
                 onChange={(e) =>
@@ -225,6 +239,8 @@ const Register = () => {
               />
 
               <input
+                name="allergies"
+                id="allergies"
                 placeholder="Allergies (e.g., Penicillin, Dust)"
                 value={form.allergies}
                 onChange={(e) =>
@@ -233,12 +249,16 @@ const Register = () => {
               />
 
               <input
+                name="disease"
+                id="disease"
                 placeholder="Existing Diseases (e.g., Diabetes, BP)"
                 value={form.disease}
                 onChange={(e) => setForm({ ...form, disease: e.target.value })}
               />
 
               <input
+                name="medication"
+                id="medication"
                 placeholder="Current Medications"
                 value={form.medication}
                 onChange={(e) =>
@@ -263,6 +283,8 @@ const Register = () => {
               <h3>🟡 Emergency Contact</h3>
 
               <input
+                name="emergencyName"
+                id="emergencyName"
                 placeholder="Emergency Contact Name"
                 value={form.emergencyName}
                 onChange={(e) =>
@@ -276,6 +298,8 @@ const Register = () => {
               )}
 
               <input
+                name="emergencyPhone"
+                id="emergencyPhone"
                 placeholder="Emergency Contact Phone (10 digits)"
                 value={form.emergencyPhone}
                 onChange={(e) =>
@@ -289,6 +313,8 @@ const Register = () => {
               )}
 
               <input
+                name="relationship"
+                id="relationship"
                 placeholder="Relationship (e.g., Father, Mother, Friend)"
                 value={form.relationship}
                 onChange={(e) =>
@@ -326,57 +352,29 @@ const Register = () => {
       <footer className="footer">
         <div className="footer-content">
           <p>© 2026 Smart Emergency Healthcare System. All rights reserved.</p>
-
-          {/* Emergency Contact Badge */}
           <div className="footer-emergency">
             <span>🚨 24/7 Emergency: 108</span>
           </div>
-
-          {/* Social Icons */}
           <div className="social-icons">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              title="Instagram"
-            >
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">
               <FaInstagram />
             </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noreferrer"
-              title="Twitter"
-            >
+            <a href="https://twitter.com" target="_blank" rel="noreferrer">
               <FaTwitter />
             </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noreferrer"
-              title="LinkedIn"
-            >
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer">
               <FaLinkedin />
             </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noreferrer"
-              title="Facebook"
-            >
+            <a href="https://facebook.com" target="_blank" rel="noreferrer">
               <FaFacebook />
             </a>
           </div>
-
-          {/* Quick Links (Optional) */}
           <div className="footer-links">
             <a href="/about">About Us</a>
             <a href="/contact">Contact</a>
             <a href="/privacy">Privacy Policy</a>
             <a href="/terms">Terms & Conditions</a>
           </div>
-
-          {/* Footer Bottom */}
           <div className="footer-bottom">
             Made with ❤️ for Emergency Healthcare
           </div>
