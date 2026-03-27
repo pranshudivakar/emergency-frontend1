@@ -143,6 +143,7 @@ const Register = () => {
               <input
                 name="name"
                 id="name"
+                autoComplete="name"
                 placeholder="Full Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -157,6 +158,7 @@ const Register = () => {
                 name="email"
                 id="email"
                 type="email"
+                autoComplete="email"
                 placeholder="Email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -171,6 +173,7 @@ const Register = () => {
                 name="password"
                 id="password"
                 type="password"
+                autoComplete="new-password"
                 placeholder="Password (min 6 characters)"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -184,6 +187,7 @@ const Register = () => {
               <input
                 name="phone"
                 id="phone"
+                autoComplete="tel"
                 placeholder="Phone Number (10 digits)"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -198,6 +202,7 @@ const Register = () => {
                 <input
                   name="age"
                   id="age"
+                  autoComplete="off"
                   placeholder="Age"
                   type="number"
                   value={form.age}
@@ -207,6 +212,7 @@ const Register = () => {
                 <select
                   name="gender"
                   id="gender"
+                  autoComplete="off"
                   value={form.gender}
                   onChange={(e) => setForm({ ...form, gender: e.target.value })}
                 >
@@ -231,6 +237,7 @@ const Register = () => {
               <input
                 name="bloodGroup"
                 id="bloodGroup"
+                autoComplete="off"
                 placeholder="Blood Group (e.g., O+, A+)"
                 value={form.bloodGroup}
                 onChange={(e) =>
@@ -241,6 +248,7 @@ const Register = () => {
               <input
                 name="allergies"
                 id="allergies"
+                autoComplete="off"
                 placeholder="Allergies (e.g., Penicillin, Dust)"
                 value={form.allergies}
                 onChange={(e) =>
@@ -251,6 +259,7 @@ const Register = () => {
               <input
                 name="disease"
                 id="disease"
+                autoComplete="off"
                 placeholder="Existing Diseases (e.g., Diabetes, BP)"
                 value={form.disease}
                 onChange={(e) => setForm({ ...form, disease: e.target.value })}
@@ -259,6 +268,7 @@ const Register = () => {
               <input
                 name="medication"
                 id="medication"
+                autoComplete="off"
                 placeholder="Current Medications"
                 value={form.medication}
                 onChange={(e) =>
@@ -285,6 +295,7 @@ const Register = () => {
               <input
                 name="emergencyName"
                 id="emergencyName"
+                autoComplete="off"
                 placeholder="Emergency Contact Name"
                 value={form.emergencyName}
                 onChange={(e) =>
@@ -300,6 +311,7 @@ const Register = () => {
               <input
                 name="emergencyPhone"
                 id="emergencyPhone"
+                autoComplete="off"
                 placeholder="Emergency Contact Phone (10 digits)"
                 value={form.emergencyPhone}
                 onChange={(e) =>
@@ -315,6 +327,7 @@ const Register = () => {
               <input
                 name="relationship"
                 id="relationship"
+                autoComplete="off"
                 placeholder="Relationship (e.g., Father, Mother, Friend)"
                 value={form.relationship}
                 onChange={(e) =>
@@ -352,29 +365,57 @@ const Register = () => {
       <footer className="footer">
         <div className="footer-content">
           <p>© 2026 Smart Emergency Healthcare System. All rights reserved.</p>
+
+          {/* Emergency Contact Badge */}
           <div className="footer-emergency">
             <span>🚨 24/7 Emergency: 108</span>
           </div>
+
+          {/* Social Icons */}
           <div className="social-icons">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              title="Instagram"
+            >
               <FaInstagram />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noreferrer"
+              title="Twitter"
+            >
               <FaTwitter />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noreferrer"
+              title="LinkedIn"
+            >
               <FaLinkedin />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noreferrer"
+              title="Facebook"
+            >
               <FaFacebook />
             </a>
           </div>
+
+          {/* Quick Links */}
           <div className="footer-links">
             <a href="/about">About Us</a>
             <a href="/contact">Contact</a>
             <a href="/privacy">Privacy Policy</a>
             <a href="/terms">Terms & Conditions</a>
           </div>
+
+          {/* Footer Bottom */}
           <div className="footer-bottom">
             Made with ❤️ for Emergency Healthcare
           </div>
