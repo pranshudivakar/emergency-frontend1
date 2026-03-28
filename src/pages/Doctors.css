@@ -1,0 +1,141 @@
+.doctors-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.navbar {
+  background: #000000;
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #ff3333;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 2rem;
+  color: white;
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.filter-section {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ff3333;
+  background: transparent;
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #ff3333;
+  color: black;
+}
+
+.doctors-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.doctor-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  display: flex;
+  padding: 1.2rem;
+  gap: 1rem;
+}
+
+.doctor-card:hover {
+  transform: translateY(-5px);
+}
+
+.doctor-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.doctor-info {
+  flex: 1;
+}
+
+.doctor-info h3 {
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.specialization {
+  color: #ff3333;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.hospital,
+.experience,
+.education,
+.availability {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0.3rem 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rating {
+  color: #ffc107;
+  margin: 0.5rem 0;
+}
+
+.call-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.call-btn:hover {
+  background: #218838;
+}
+
+@media (max-width: 768px) {
+  .doctor-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .doctor-image img {
+    margin: 0 auto;
+  }
+}

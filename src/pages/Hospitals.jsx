@@ -296,7 +296,7 @@ const staticHospitals = [
   {
     name: "Fortis Hospital",
     address: "Sector 62, Noida, Uttar Pradesh 201301",
-    phone: "+91-120-1234567",
+    phone: "+91-7524021510",
     latitude: 28.6212,
     longitude: 77.3796,
     emergency: "24/7",
