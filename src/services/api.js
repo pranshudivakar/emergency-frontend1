@@ -1,17 +1,19 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
+import axios from 'axios';
 const API = axios.create({
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL || 'https://emergency-backend-8n80.onrender.com',
+  timeout: 10000, // 10 second timeout
 });
 
-API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
+// Add response interceptor for better error handling
+API.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('API Error:', error);
+    if (error.code === 'ECONNABORTED') {
+      alert('Server is taking too long to respond. Please try again.');
+    } else if (!error.response) {
+      alert('Cannot connect to server. Please check your internet connection.');
+    }
+    return Promise.reject(error);
   }
-  return req;
-});
-
-export default API;
+);

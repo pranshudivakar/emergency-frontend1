@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Hospitals from "./pages/Hospitals";
 import Doctors from "./pages/Doctors"; // ✅ Import Hospitals
+import Emergency from "./pages/Emergency"; 
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/hospitals" element={<Hospitals />} />
         <Route path="/doctors" element={<Doctors />} />
+        <Route path="/emergency" element={<Emergency />} />
         <Route path="/ambulance" element={<div>Ambulance Page</div>} />
       </Routes>
     </BrowserRouter>
