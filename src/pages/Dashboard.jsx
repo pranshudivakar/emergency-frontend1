@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import "./Dashboard.css";
@@ -10,24 +10,27 @@ const Dashboard = () => {
   const [mapLink, setMapLink] = useState("");
   const [user, setUser] = useState(null);
   const [locationActive, setLocationActive] = useState(false);
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false);
 
-  // ✅ Emergency Status States
+  // Emergency Status States
   const [emergencyId, setEmergencyId] = useState(null);
   const [emergencyStatus, setEmergencyStatus] = useState(null);
   const [hospital, setHospital] = useState(null);
   const [hospitalsNotified, setHospitalsNotified] = useState([]);
   const [showStatus, setShowStatus] = useState(false);
+  const [hospitalNotifiedName, setHospitalNotifiedName] = useState("");
 
   // Get user data on component mount
   useEffect(() => {
     const userData = localStorage.getItem("user");
+    const userId = localStorage.getItem("userId");
     if (userData) {
       setUser(JSON.parse(userData));
-      console.log("User Data Loaded:", JSON.parse(userData));
     }
   }, []);
 
-  // Check location permission
   useEffect(() => {
     if (navigator.permissions) {
       navigator.permissions.query({ name: "geolocation" }).then((result) => {
@@ -36,7 +39,55 @@ const Dashboard = () => {
     }
   }, []);
 
-  // ✅ Polling for emergency status
+
+  const enableAudio = () => {
+    if (audioRef.current && !audioEnabled) {
+      audioRef.current
+        .play()
+        .then(() => {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          setAudioEnabled(true);
+          console.log("🔊 Audio enabled");
+        })
+        .catch((err) => {
+          console.log("Audio enable failed:", err);
+        });
+    }
+  };
+  const playRingtone = () => {
+    if (audioRef.current && audioEnabled && !isPlaying) {
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          console.log("🔔 Ringtone playing...");
+        })
+        .catch((error) => {
+          console.error("❌ Audio play failed:", error);
+        });
+    }
+  };
+  const stopRingtone = () => {
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      console.log("🔕 Ringtone stopped");
+    }
+  };
+
+  useEffect(() => {
+    if (
+      showStatus &&
+      (emergencyStatus === "pending" || emergencyStatus === "accepted")
+    ) {
+      playRingtone();
+    } else {
+      stopRingtone();
+    }
+  }, [showStatus, emergencyStatus, audioEnabled]);
+
   useEffect(() => {
     if (!emergencyId) return;
 
@@ -46,21 +97,21 @@ const Dashboard = () => {
         setEmergencyStatus(res.data.status);
         setHospitalsNotified(res.data.hospitalsNotified || []);
 
-        // If accepted, fetch hospital details
         if (res.data.status === "accepted" && res.data.acceptedHospital) {
           const hospitalsRes = await API.get("/api/hospitals");
           const foundHospital = hospitalsRes.data.hospitals.find(
             (h) => h._id === res.data.acceptedHospital,
           );
           setHospital(foundHospital);
+          setShowStatus(true);
         }
 
-        // If no longer pending, stop polling after some time
-        if (res.data.status !== "pending") {
-          setTimeout(() => {
-            setShowStatus(false);
-            setEmergencyId(null);
-          }, 30000); // Hide after 30 seconds
+        if (res.data.status === "pending" && res.data.hospitalsNotified) {
+          setHospitalsNotified(res.data.hospitalsNotified);
+        }
+
+        if (res.data.status === "no_hospitals") {
+          setShowStatus(true);
         }
       } catch (error) {
         console.error("Status check failed:", error);
@@ -80,6 +131,8 @@ const Dashboard = () => {
     setMessage("");
     setMapLink("");
     setShowStatus(false);
+    setHospital(null);
+    setEmergencyStatus(null);
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -97,36 +150,27 @@ const Dashboard = () => {
             email: userData.email || "Not provided",
           };
 
-          console.log("Sending Emergency Data:", emergencyData);
-
           const res = await API.post("/api/emergency", emergencyData);
 
-          // ✅ Set emergency ID for status tracking
           setEmergencyId(res.data.emergencyId);
           setShowStatus(true);
           setEmergencyStatus("pending");
+          setHospitalNotifiedName(
+            res.data.hospitalNotified || "Nearest hospital",
+          );
 
           const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
           setMapLink(mapsUrl);
 
-          setMessage(`
-🚨 EMERGENCY ALERT SENT SUCCESSFULLY!
-
-👤 Name: ${userData.name || "Not provided"}
-📞 Phone: ${userData.phone || "Not provided"}
-📍 Location: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}
-🏥 Hospital: ${res.data.hospitalNotified || "Nearest hospital"}
-
-⏱️ Waiting for hospital response...
-          `);
-
-          setLocationActive(true);
-        } catch (error) {
-          console.error("Emergency Error:", error);
           setMessage(
-            error.response?.data?.message ||
-              "❌ Server Error — Emergency Not Sent",
+            `🚨 EMERGENCY ALERT SENT! Waiting for hospital response...`,
           );
+          setLocationActive(true);
+
+          playRingtone();
+        } catch (error) {
+          setMessage(error.response?.data?.message || "❌ Server Error");
+          setShowStatus(false);
         } finally {
           setLoading(false);
         }
@@ -136,10 +180,7 @@ const Dashboard = () => {
         setLocationActive(false);
         let errorMsg = "❌ Location Permission Denied";
         if (err.code === 1) {
-          errorMsg =
-            "❌ Location Permission Denied. Please enable location access for emergency alerts.";
-        } else if (err.code === 2) {
-          errorMsg = "❌ Location unavailable. Please try again.";
+          errorMsg = "❌ Please enable location access for emergency alerts";
         }
         setMessage(errorMsg);
       },
@@ -159,18 +200,39 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  // ✅ Cancel Emergency
   const cancelEmergency = () => {
     setEmergencyId(null);
     setShowStatus(false);
     setEmergencyStatus(null);
     setHospital(null);
     setMessage("");
+    stopRingtone();
   };
 
   return (
-    <div className="dashboard-page">
-      {/* Navbar */}
+    <div className="dashboard-page" onClick={enableAudio}>
+
+      <audio ref={audioRef} loop preload="auto">
+        <source
+          src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"
+          type="audio/mpeg"
+        />
+        <source
+          src="https://actions.google.com/sounds/447/alarm-clock-short.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
+
+    
+      {!audioEnabled && (
+        <div className="audio-enable-banner">
+          <button onClick={enableAudio}>
+            🔔 Click to Enable Emergency Sound
+          </button>
+        </div>
+      )}
+
+      {/* Navbar with User Details */}
       <nav className="navbar">
         <div className="logo" onClick={() => navigate("/")}>
           🏥 Emergency Healthcare
@@ -188,7 +250,9 @@ const Dashboard = () => {
                   📞 {user.phone || "No phone"}
                 </span>
               </div>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={handleLogout} className="logout-btn">
+                Logout
+              </button>
             </>
           ) : (
             <>
@@ -199,30 +263,11 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      {/* Main Dashboard */}
+      {/* Rest of your dashboard code remains same */}
       <div className="dashboard-container">
         <div className="dashboard-card">
           <h2>🚑 Emergency Dashboard</h2>
 
-          {/* ✅ User Info Card */}
-          {user && (
-            <div className="user-info-card">
-              <h3>👤 Your Information</h3>
-              <div className="user-details">
-                <p>
-                  <strong>Name:</strong> {user.name}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {user.phone || "Not provided"}
-                </p>
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Location Status */}
           <div
             className={`location-status ${locationActive ? "active" : "inactive"}`}
           >
@@ -231,7 +276,7 @@ const Dashboard = () => {
               : "📍 Location Inactive - Enable for emergency"}
           </div>
 
-          {/* ✅ Emergency Status Tracking Card */}
+          {/* Emergency Status Tracking */}
           {showStatus && emergencyStatus === "pending" && (
             <div className="emergency-status-card pending">
               <div className="pulse-icon">🚨</div>
@@ -239,7 +284,11 @@ const Dashboard = () => {
               <div className="status-spinner"></div>
               <p className="hospital-name">
                 📍 Contacting:{" "}
-                <strong>{hospitalsNotified[0] || "Searching..."}</strong>
+                <strong>
+                  {hospitalsNotified[hospitalsNotified.length - 1] ||
+                    hospitalNotifiedName ||
+                    "Searching..."}
+                </strong>
               </p>
               <p>
                 Please stay at your location. Hospital will call you shortly.
@@ -253,6 +302,7 @@ const Dashboard = () => {
             </div>
           )}
 
+          {/* ACCEPTED - Ambulance Dispatched */}
           {showStatus && emergencyStatus === "accepted" && hospital && (
             <div className="emergency-status-card accepted">
               <div className="success-icon">✅</div>
@@ -286,6 +336,27 @@ const Dashboard = () => {
             </div>
           )}
 
+          {/* FORWARDED to next hospital */}
+          {showStatus &&
+            emergencyStatus === "pending" &&
+            hospitalsNotified.length > 1 && (
+              <div className="emergency-status-card forwarded">
+                <div className="warning-icon">⚠️</div>
+                <h3>Forwarded to Another Hospital</h3>
+                <p>
+                  Previous hospital couldn't respond. Contacting next
+                  hospital...
+                </p>
+                <p className="hospital-name">
+                  📍 Now Contacting:{" "}
+                  <strong>
+                    {hospitalsNotified[hospitalsNotified.length - 1]}
+                  </strong>
+                </p>
+              </div>
+            )}
+
+          {/* NO HOSPITALS AVAILABLE */}
           {showStatus && emergencyStatus === "no_hospitals" && (
             <div className="emergency-status-card no-hospitals">
               <div className="error-icon">❌</div>
@@ -322,9 +393,9 @@ const Dashboard = () => {
           {/* Message Box */}
           {message && !showStatus && (
             <div
-              className={`message-box ${message.includes("SUCCESSFULLY") ? "success" : "error"}`}
+              className={`message-box ${message.includes("SENT") ? "success" : "error"}`}
             >
-              {message}
+              <p>{message}</p>
             </div>
           )}
 

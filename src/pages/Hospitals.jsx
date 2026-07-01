@@ -26,7 +26,8 @@ const Hospitals = () => {
 
   const fetchHospitals = async () => {
     try {
-      const res = await API.get("/hospitals");
+      const res = await API.get("/api/hospitals");
+      console.log("Hospitals fetched:", res.data);
       if (res.data.hospitals && res.data.hospitals.length > 0) {
         setHospitals(res.data.hospitals);
       } else {
@@ -50,14 +51,28 @@ const Hospitals = () => {
           });
         },
         (error) => {
-          console.log("Location permission denied");
+          console.log("Location permission denied:", error);
+          setUserLocation({
+            lat: 28.6212, // 
+            lng: 77.3796,
+          });
+          
+          alert(
+            "⚠️ Location access denied. Using default location (Noida Sector 62).\n\nTo enable, click the lock icon in address bar and allow location.",
+          );
         },
       );
+    } else {
+      // Browser doesn't support geolocation
+      setUserLocation({
+        lat: 28.6212,
+        lng: 77.3796,
+      });
     }
   };
 
   const getDistance = (lat1, lon1, lat2, lon2) => {
-    if (!lat1 || !lon1) return null;
+    if (!lat1 || !lon1 || !lat2 || !lon2) return null;
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -71,9 +86,7 @@ const Hospitals = () => {
     return (R * c).toFixed(1);
   };
 
-  // ✅ Open location in Google Maps
   const openLocation = (lat, lng, name) => {
-    // Open Google Maps with directions from current location
     if (userLocation) {
       window.open(
         `https://www.google.com/maps/dir/${userLocation.lat},${userLocation.lng}/${lat},${lng}/`,
@@ -84,15 +97,13 @@ const Hospitals = () => {
     }
   };
 
-  // ✅ Call hospital
   const handleCall = (phone, e) => {
-    e.stopPropagation(); // Prevent card click when clicking call button
+    e.stopPropagation();
     window.location.href = `tel:${phone}`;
   };
 
-  // ✅ Get directions
   const handleDirections = (lat, lng, e) => {
-    e.stopPropagation(); // Prevent card click when clicking directions button
+    e.stopPropagation();
     openLocation(lat, lng);
   };
 
@@ -102,7 +113,7 @@ const Hospitals = () => {
   });
 
   const sortedHospitals = [...filteredHospitals].sort((a, b) => {
-    if (userLocation) {
+    if (userLocation && a.latitude && b.latitude) {
       const distA = getDistance(
         userLocation.lat,
         userLocation.lng,
@@ -133,7 +144,6 @@ const Hospitals = () => {
               Hospitals
             </button>
             <button onClick={() => navigate("/doctors")}>Doctors</button>
-            <button onClick={() => navigate("/ambulance")}>Ambulance</button>
             <button onClick={() => navigate("/login")}>Login</button>
             <button onClick={() => navigate("/register")}>Register</button>
           </div>
@@ -158,7 +168,6 @@ const Hospitals = () => {
             Hospitals
           </button>
           <button onClick={() => navigate("/doctors")}>Doctors</button>
-          <button onClick={() => navigate("/ambulance")}>Ambulance</button>
           <button onClick={() => navigate("/login")}>Login</button>
           <button onClick={() => navigate("/register")}>Register</button>
         </div>
@@ -196,16 +205,16 @@ const Hospitals = () => {
           </div>
         ) : (
           sortedHospitals.map((hospital, index) => {
-            const distance = userLocation
-              ? getDistance(
-                  userLocation.lat,
-                  userLocation.lng,
-                  hospital.latitude,
-                  hospital.longitude,
-                )
-              : null;
+            const distance =
+              userLocation && hospital.latitude
+                ? getDistance(
+                    userLocation.lat,
+                    userLocation.lng,
+                    hospital.latitude,
+                    hospital.longitude,
+                  )
+                : null;
             return (
-              // ✅ Card click - Open location in Google Maps
               <div
                 key={hospital._id || index}
                 className="hospital-card"
@@ -218,7 +227,17 @@ const Hospitals = () => {
                 }
               >
                 <div className="hospital-image">
-                  <img src={hospital.image} alt={hospital.name} />
+                  <img
+                    src={
+                      hospital.image ||
+                      "https://via.placeholder.com/300x200?text=Hospital"
+                    }
+                    alt={hospital.name}
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/300x200?text=Hospital";
+                    }}
+                  />
                   {hospital.emergency === "24/7" && (
                     <div className="emergency-tag">🚨 24/7</div>
                   )}
@@ -227,7 +246,7 @@ const Hospitals = () => {
                   <div className="hospital-header">
                     <h3>{hospital.name}</h3>
                     <div className="rating">
-                      <FaStar /> {hospital.rating}
+                      <FaStar /> {hospital.rating || "4.5"}
                     </div>
                   </div>
                   <p className="address">
@@ -241,13 +260,13 @@ const Hospitals = () => {
                   )}
                   <div className="hospital-stats">
                     <div className="stat">
-                      <FaBed /> {hospital.bedsAvailable} Beds
+                      <FaBed /> {hospital.bedsAvailable || "N/A"} Beds
                     </div>
                     <div className="stat">
-                      <FaAmbulance /> {hospital.ambulances} Ambulances
+                      <FaAmbulance /> {hospital.ambulances || "N/A"} Ambulances
                     </div>
                     <div className="stat">
-                      <FaClock /> {hospital.emergency}
+                      <FaClock /> {hospital.emergency || "24/7"}
                     </div>
                   </div>
                   <div className="hospital-actions">
@@ -289,9 +308,7 @@ const Hospitals = () => {
   );
 };
 
-// Hospitals with Images - 5 Hospitals
-
-// Hospitals near Sector 63, Noida - Front photos with hospital name visible
+// ✅ Fixed Static Hospitals with working images
 const staticHospitals = [
   {
     name: "Fortis Hospital",
@@ -299,14 +316,13 @@ const staticHospitals = [
     phone: "+91-7524021510",
     latitude: 28.6212,
     longitude: 77.3796,
+    email: "hospitalalerts4@gmail.com",
     emergency: "24/7",
     rating: "4.8",
     bedsAvailable: 200,
     ambulances: 15,
     image:
-      " https://static.medigence.com/uploads/hospital/images/1743589779_d82a39c45624d8d0abc9.jpg",
-    distance: "2.5 km",
-    travelTime: "8 mins",
+      "https://static.medigence.com/uploads/hospital/images/1743589779_d82a39c45624d8d0abc9.jpg"
   },
   {
     name: "Max Super Speciality Hospital",
@@ -314,14 +330,13 @@ const staticHospitals = [
     phone: "+91-11-12345678",
     latitude: 28.6457,
     longitude: 77.3179,
+    email: "p46415053@gmail.com",
     emergency: "24/7",
     rating: "4.7",
     bedsAvailable: 180,
     ambulances: 12,
     image:
-      "https://www.globalcarehealth.com/img/hospitalsimg/Max-Jaypee-Hospital-Noida-India-gchh93.webp",
-    distance: "6.8 km",
-    travelTime: "20 mins",
+      "https://content.jdmagicbox.com/v2/comp/delhi/z4/011pxx11.xx11.250817081712.b4z4/catalogue/max-super-speciality-hospital-shalimar-bagh-delhi-5ek1ur7cxs.jpg"
   },
   {
     name: "Kailash Hospital",
@@ -329,13 +344,13 @@ const staticHospitals = [
     phone: "+91-120-4567890",
     latitude: 28.5997,
     longitude: 77.4012,
+    email: "pranshupranshu92153@gmail.com",
     emergency: "24/7",
     rating: "4.5",
     bedsAvailable: 150,
     ambulances: 10,
-    image: "https://images.unsplash.com/photo-1654762930571-dcf2ebc11542",
-    distance: "3.2 km",
-    travelTime: "10 mins",
+    image:
+      "https://www.kailashhealthcare.com/Content/images/GH-H-doon-Thumb.png"
   },
   {
     name: "Metro Hospital & Heart Institute",
@@ -343,14 +358,13 @@ const staticHospitals = [
     phone: "+91-120-9876543",
     latitude: 28.5856,
     longitude: 77.3181,
+    email: "hospitalalerts4@gmail.com",
     emergency: "24/7",
     rating: "4.6",
     bedsAvailable: 220,
     ambulances: 18,
     image:
-      "https://vaidam-images.s3.ap-southeast-1.amazonaws.com/webp/25/files/metro-hospitals-heart-institute-noida.webp",
-    distance: "5.1 km",
-    travelTime: "15 mins",
+      "https://i.ytimg.com/vi/yWsXj_-VfVM/sddefault.jpg"
   },
   {
     name: "Yatharth Super Speciality Hospital",
@@ -358,28 +372,27 @@ const staticHospitals = [
     phone: "+91-120-7890123",
     latitude: 28.5789,
     longitude: 77.4215,
+    email: "pranshu.diwakar.739914@gmail.com",
     emergency: "24/7",
     rating: "4.4",
     bedsAvailable: 300,
     ambulances: 20,
     image:
-      "https://www.yatharthhospitals.com/uploads/pages/yatharth_62203518.jpg",
-    distance: "4.5 km",
-    travelTime: "12 mins",
+      "https://www.yatharthhospitals.com/uploads/hostmaster/yatharth_53830047.jpg"
   },
-
   {
     name: "Apollo Hospital",
-    email: "hospitalalerts4@gmail.com",
+    address: "Sector 26, Noida, Uttar Pradesh - 201301",
+    phone: "+91-11-98765432",
     latitude: 28.5987,
     longitude: 77.2075,
-    phone: "+91-11-98765432",
-    address: "Sector 26, Noida, Uttar Pradesh - 201301",
+    email: "hospitalalerts4@gmail.com",
     emergency: "24/7",
     rating: "4.8",
     bedsAvailable: 250,
     ambulances: 15,
-    image: "https://medicaldialogues.in/h-upload/2021/10/26/162730-apollo-hospital.webp",
+    image:
+      "https://bsmedia.business-standard.com/_media/bs/img/article/2025-04/07/full/1744000876-7812.jpg?im=FitAndFill=(382,233)"
   },
 ];
 

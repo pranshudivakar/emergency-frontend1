@@ -9,7 +9,6 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Check if user is logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -18,7 +17,6 @@ const Home = () => {
     }
   }, []);
 
-  // Handle Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
@@ -28,19 +26,18 @@ const Home = () => {
     navigate("/");
   };
 
-  // Handle Emergency
+  
   const handleEmergency = () => {
     setLoading(true);
 
-    // Get user location
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           console.log("Emergency Location:", latitude, longitude);
 
-          // Here you can send this location to your backend
-          // API.post("/emergency", { lat: latitude, lng: longitude });
+      
 
           alert("🚨 Emergency alert sent! Hospital will contact you soon.");
           setLoading(false);
@@ -137,7 +134,6 @@ const Home = () => {
           </div>
         </div>
       </main>
-      // Footer section exactly aise rahega:
       <footer className="footer">
         <div className="footer-content">
           <p>© 2026 Smart Emergency Healthcare System. All rights reserved.</p>
@@ -182,8 +178,6 @@ const Home = () => {
               <FaFacebook />
             </a>
           </div>
-
-          {/* Quick Links (Optional) */}
           <div className="footer-links">
             <a href="/about">About Us</a>
             <a href="/contact">Contact</a>
@@ -191,7 +185,6 @@ const Home = () => {
             <a href="/terms">Terms & Conditions</a>
           </div>
 
-          {/* Footer Bottom */}
           <div className="footer-bottom">
             Made with ❤️ for Emergency Healthcare
           </div>

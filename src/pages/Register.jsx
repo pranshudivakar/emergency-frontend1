@@ -74,7 +74,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const res = await API.post("/auth/register", form);
+      const res = await API.post("/api/auth/register", form);
       console.log("Registration Success:", res.data);
 
       alert("✅ Registration Successful! Ab login karo");
@@ -105,13 +105,13 @@ const Register = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
+    
       <div className="hero-section">
         <h1>📝 Patient Registration</h1>
         <p>Emergency ke liye apni medical information save karo</p>
       </div>
 
-      {/* Registration Form */}
+    
       <div className="registerContainer">
         <form onSubmit={handleSubmit} className="registerForm">
           <h2>🚀 Register</h2>
@@ -228,8 +228,6 @@ const Register = () => {
               </button>
             </>
           )}
-
-          {/* Step 2: Medical Information */}
           {currentStep === 2 && (
             <>
               <h3>🔵 Medical Information</h3>
@@ -287,7 +285,7 @@ const Register = () => {
             </>
           )}
 
-          {/* Step 3: Emergency Contact */}
+      
           {currentStep === 3 && (
             <>
               <h3>🟡 Emergency Contact</h3>

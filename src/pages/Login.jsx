@@ -19,12 +19,10 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await API.post("/auth/login", form);
+      const res = await API.post("/api/auth/login", form);
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.user._id);
-
-      // ✅ IMPORTANT: Save full user data with name and phone number
       const userData = {
         name: res.data.user.name,
         email: res.data.user.email,
